@@ -19,7 +19,7 @@ jobs:
       env:
         DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
         DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-        DOCKER_REGISTRY: dockerhub.io
+        DOCKER_REGISTRY: dockerhub.io/nkem
         IMAGE_NAME: helloworld
         IMAGE_TAG: latest
       run: |
