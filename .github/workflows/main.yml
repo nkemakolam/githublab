@@ -1,27 +1,31 @@
-name: Build and Push Docker Image
+name: CI Pipeline
+
 on:
   push:
     branches:
       - main
 
 jobs:
-  build-and-push:
+  build-and-test:
     runs-on: ubuntu-latest
 
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v1
+    - name: Build Docker image
+      run: docker build -t your-image-name:${{ github.sha }} .
 
-    - name: Build and Push Docker Image
-      env:
-        DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-        DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-        DOCKER_REGISTRY: dockerhub.io/nkem
-        IMAGE_NAME: helloworld
-        IMAGE_TAG: latest
+    - name: Run tests
       run: |
-        echo $DOCKER_PASSWORD | docker login $DOCKER_REGISTRY -u $DOCKER_USERNAME --password-stdin
-        docker buildx build --platform linux/amd64 -t $DOCKER_REGISTRY/$IMAGE_NAME:$IMAGE_TAG --push .
+        # Run your test commands here
+
+    - name: Push Docker image
+      uses: docker/build-push-action@v2
+      with:
+        context: .
+        push: true
+        tags: nkem/helloworldlab:${{ github.sha }}
+        registry: docker.io
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
